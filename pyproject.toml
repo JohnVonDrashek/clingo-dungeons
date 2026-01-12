@@ -1,0 +1,14 @@
+[project]
+name = "clingo-dungeons"
+version = "0.1.0"
+description = "Exploring ASP (clingo) for roguelike dungeon generation"
+requires-python = ">=3.11"
+dependencies = [
+    "clingo>=5.7.0",
+    "networkx>=3.0",  # For graph visualization in tests
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
