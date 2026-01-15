@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Set, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent))
-from generate_clingcon import generate_dungeon, Dungeon
+from dungeon import generate_dungeon, Dungeon
 
 
 def render_ascii(dungeon: Dungeon) -> str:
@@ -15,7 +15,6 @@ def render_ascii(dungeon: Dungeon) -> str:
     height = dungeon.height + 2
 
     grid = [[' ' for _ in range(width)] for _ in range(height)]
-    room_tiles: Set[Tuple[int, int]] = set()
 
     # Draw rooms
     for room in dungeon.rooms.values():
@@ -23,7 +22,6 @@ def render_ascii(dungeon: Dungeon) -> str:
             for ry in range(room.y, room.y + room.height):
                 if 0 <= rx < width and 0 <= ry < height:
                     grid[ry][rx] = '.'
-                    room_tiles.add((rx, ry))
 
         cx, cy = room.x + room.width // 2, room.y + room.height // 2
         if 0 <= cx < width and 0 <= cy < height:
