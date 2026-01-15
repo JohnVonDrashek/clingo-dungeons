@@ -10,6 +10,10 @@
   <a href="https://potassco.org/clingo/"><img src="https://img.shields.io/badge/clingo-5.7+-green.svg" alt="Clingo 5.7+"></a>
 </p>
 
+<p align="center">
+  <img src="example_graph.png" alt="Dungeon Graph" width="600">
+</p>
+
 ---
 
 Generate roguelike dungeon layouts using Clingo (Answer Set Programming). Define constraints declaratively - room counts, connectivity rules, content distribution - and let the solver find valid configurations. Then render to ASCII or graph visualizations.
@@ -60,47 +64,8 @@ uv run python pmd/visualize_graph.py 7 dungeon.png
 
 ## Example Output
 
-**Graph Visualization:**
-
-![Dungeon Graph](example_graph.png)
-
-Rooms shown on a grid with coordinates, dimensions, and content counts. Spawn (green), Stairs (orange), and regular rooms (blue) connected by corridors.
-
-**ASCII Grid:**
-```
-                       .....
-                       .....
-                       .....
-                       .....
-                        ,,
-       .......       ,,,
-       .......     ,,
-....  ,.......,  ....
-.... , ....... , ....
-..S.,           ,....
-....             ....
-                   ,
-                    ,
-                    ,
-                     ,
-                      ,
-                      ,
-                       ,
-                   ........
-                   ........    ....
-                   ........,,  ....
-                   ........  ,,..>.
-                       ,       ....
-                     ,,
-                   ,,
-                 ,,
-               ....
-               ....
-               ....
-               ....
-```
-
-Legend: `.` = floor, `,` = corridor, `S` = spawn, `>` = stairs
+- **Graph**: Room topology with coordinates, dimensions, and content ([example](example_graph.png))
+- **ASCII**: Text grid with Bresenham corridors ([example](example_ascii.txt))
 
 ## How It Works
 
