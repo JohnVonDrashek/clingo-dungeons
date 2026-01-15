@@ -5,7 +5,10 @@ description = "Exploring ASP (clingo) for roguelike dungeon generation"
 requires-python = ">=3.11"
 dependencies = [
     "clingo>=5.7.0",
-    "networkx>=3.0",  # For graph visualization in tests
+    "networkx>=3.0",  # For graph visualization and force layout
+    "pathfinding>=1.0",  # For A* corridor routing
+    "numpy>=1.24",  # Required by networkx spring_layout
+    "matplotlib>=3.7",  # For graph PNG visualization
 ]
 
 [project.optional-dependencies]
