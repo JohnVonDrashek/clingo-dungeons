@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage 3: Calculate corridor paths between rooms."""
+"""Stage 3: Calculate corridor paths using Bresenham."""
 
 from typing import List, Dict, Tuple
 
@@ -37,7 +37,7 @@ def bresenham_path(start: Tuple[int, int], end: Tuple[int, int]) -> List[Tuple[i
 
 def calculate_corridors(placed_rooms: Dict[int, PlacedRoom],
                         connections: List[Tuple[int, int]]) -> List[List[Tuple[int, int]]]:
-    """Calculate corridor tile positions between connected rooms."""
+    """Calculate corridor paths between connected rooms."""
     corridor_paths = []
     for r1_id, r2_id in connections:
         if r1_id not in placed_rooms or r2_id not in placed_rooms:
