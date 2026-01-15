@@ -4,9 +4,9 @@
 import sys
 sys.path.insert(0, "pmd")
 
-from visualize_graph import visualize_graph, print_graph_info
-from render_ascii import generate_ascii_dungeon
-from generate_clingcon import generate_clingcon_floor
+from visualize_graph import visualize_graph
+from render_ascii import render_ascii
+from generate_clingcon import generate_clingcon_floor, generate_dungeon
 
 NUM_EXAMPLES = 10
 NUM_ROOMS = 7
@@ -19,14 +19,15 @@ def main():
     for i in range(1, NUM_EXAMPLES + 1):
         num = f"{i:02d}"
 
-        # Generate graph PNG
+        # Generate graph PNG (uses topology only)
         data = generate_clingcon_floor(NUM_ROOMS)
         if data:
             visualize_graph(data, f"output/graph/dungeon_{num}.png")
 
-        # Generate ASCII text
-        ascii_grid, _ = generate_ascii_dungeon(NUM_ROOMS)
-        if ascii_grid:
+        # Generate ASCII text (uses full dungeon calculation)
+        dungeon = generate_dungeon(NUM_ROOMS)
+        if dungeon:
+            ascii_grid = render_ascii(dungeon)
             with open(f"output/ascii/dungeon_{num}.txt", "w") as f:
                 f.write(ascii_grid)
             print(f"  output/ascii/dungeon_{num}.txt")

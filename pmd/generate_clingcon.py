@@ -143,6 +143,87 @@ def _push_apart(r1: PlacedRoom, r2: PlacedRoom, min_gap: int) -> bool:
     return True
 
 
+def bresenham_path(start: Tuple[int, int], end: Tuple[int, int]) -> List[Tuple[int, int]]:
+    """Bresenham's line algorithm - cardinal-only steps."""
+    x1, y1 = start
+    x2, y2 = end
+    path = [(x1, y1)]
+
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+    sx = 1 if x2 > x1 else -1
+    sy = 1 if y2 > y1 else -1
+    err = dx - dy
+    x, y = x1, y1
+
+    while x != x2 or y != y2:
+        e2 = 2 * err
+        if e2 > -dy and (e2 < dx and dx > dy or e2 >= dx):
+            err -= dy
+            x += sx
+        elif e2 < dx:
+            err += dx
+            y += sy
+        elif e2 > -dy:
+            err -= dy
+            x += sx
+        path.append((x, y))
+
+    return path
+
+
+def calculate_corridors(placed_rooms: Dict[int, PlacedRoom],
+                        connections: List[Tuple[int, int]]) -> List[List[Tuple[int, int]]]:
+    """Calculate corridor tile positions between connected rooms."""
+    corridor_paths = []
+    for r1_id, r2_id in connections:
+        if r1_id not in placed_rooms or r2_id not in placed_rooms:
+            continue
+        r1, r2 = placed_rooms[r1_id], placed_rooms[r2_id]
+        start = (r1.x + r1.width // 2, r1.y + r1.height // 2)
+        end = (r2.x + r2.width // 2, r2.y + r2.height // 2)
+        corridor_paths.append(bresenham_path(start, end))
+    return corridor_paths
+
+
+@dataclass
+class Dungeon:
+    """Complete calculated dungeon with rooms and corridors."""
+    rooms: Dict[int, PlacedRoom]
+    connections: List[Tuple[int, int]]  # room ID pairs
+    corridor_tiles: List[List[Tuple[int, int]]]  # paths between rooms
+    item_types: Dict[int, str]
+    enemy_types: Dict[int, str]
+    trap_types: Dict[int, str]
+
+    @property
+    def width(self) -> int:
+        return max(r.x + r.width for r in self.rooms.values()) + 1
+
+    @property
+    def height(self) -> int:
+        return max(r.y + r.height for r in self.rooms.values()) + 1
+
+
+def generate_dungeon(num_rooms: int = 7, min_gap: int = 2) -> Dungeon:
+    """Generate a complete dungeon with rooms and corridors."""
+    data = generate_clingcon_floor(num_rooms)
+    if data is None:
+        return None
+
+    placed = place_rooms(data["rooms"], data["corridors"], min_gap=min_gap)
+    corridor_tiles = calculate_corridors(placed, data["corridors"])
+
+    return Dungeon(
+        rooms=placed,
+        connections=data["corridors"],
+        corridor_tiles=corridor_tiles,
+        item_types=data["item_types"],
+        enemy_types=data["enemy_types"],
+        trap_types=data["trap_types"],
+    )
+
+
 def parse_clingo_output(output: str) -> dict:
     """Parse clingo output for room topology and grid positions."""
     data = {
