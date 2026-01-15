@@ -146,11 +146,11 @@ def push_apart(r1: PlacedRoom, r2: PlacedRoom, min_gap: int) -> bool:
 
 
 def bresenham_path(start: Tuple[int, int], end: Tuple[int, int]) -> List[Tuple[int, int]]:
-    """Bresenham's line algorithm - approximates diagonal with cardinal steps."""
+    """Bresenham's line algorithm - approximates diagonal with cardinal-only steps."""
     x1, y1 = start
     x2, y2 = end
 
-    path = []
+    path = [(x1, y1)]
 
     dx = abs(x2 - x1)
     dy = abs(y2 - y1)
@@ -160,21 +160,24 @@ def bresenham_path(start: Tuple[int, int], end: Tuple[int, int]) -> List[Tuple[i
     err = dx - dy
     x, y = x1, y1
 
-    while True:
-        path.append((x, y))
-
-        if x == x2 and y == y2:
-            break
-
+    while x != x2 or y != y2:
         e2 = 2 * err
 
-        if e2 > -dy:
+        # Only move in ONE direction per step (cardinal movement only)
+        if e2 > -dy and (e2 < dx and dx > dy or e2 >= dx):
+            # Prefer horizontal when dx > dy, or when only horizontal needed
+            err -= dy
+            x += sx
+        elif e2 < dx:
+            # Move vertical
+            err += dx
+            y += sy
+        elif e2 > -dy:
+            # Move horizontal (fallback)
             err -= dy
             x += sx
 
-        if e2 < dx:
-            err += dx
-            y += sy
+        path.append((x, y))
 
     return path
 
