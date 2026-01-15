@@ -353,37 +353,10 @@ def simple_l_corridor(start: Tuple[int, int], end: Tuple[int, int]) -> List[Tupl
 
 
 def find_connection_points(r1: PlacedRoom, r2: PlacedRoom) -> Tuple[Tuple[int, int], Tuple[int, int]]:
-    """Find the best points on room edges to connect with a corridor."""
-    # Room centers
+    """Connect room centers - Bresenham handles the path naturally."""
     cx1, cy1 = r1.x + r1.width // 2, r1.y + r1.height // 2
     cx2, cy2 = r2.x + r2.width // 2, r2.y + r2.height // 2
-
-    # Determine primary direction
-    dx = cx2 - cx1
-    dy = cy2 - cy1
-
-    if abs(dx) >= abs(dy):
-        # Connect horizontally
-        if dx > 0:
-            # r2 is to the right of r1
-            start = (r1.x + r1.width, cy1)  # Right edge of r1
-            end = (r2.x - 1, cy2)  # Left edge of r2
-        else:
-            # r2 is to the left of r1
-            start = (r1.x - 1, cy1)  # Left edge of r1
-            end = (r2.x + r2.width, cy2)  # Right edge of r2
-    else:
-        # Connect vertically
-        if dy > 0:
-            # r2 is below r1
-            start = (cx1, r1.y + r1.height)  # Bottom edge of r1
-            end = (cx2, r2.y - 1)  # Top edge of r2
-        else:
-            # r2 is above r1
-            start = (cx1, r1.y - 1)  # Top edge of r1
-            end = (cx2, r2.y + r2.height)  # Bottom edge of r2
-
-    return start, end
+    return (cx1, cy1), (cx2, cy2)
 
 
 def generate_ascii_dungeon(num_rooms: int = 7, min_gap: int = 2) -> Tuple[str, dict]:
